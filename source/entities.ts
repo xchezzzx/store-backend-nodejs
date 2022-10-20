@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { Role } from "./enums";
+import { Role, Status } from "./enums";
 
 export interface entityWithId {
     id: number;
@@ -7,6 +7,12 @@ export interface entityWithId {
 
 export interface whiteBoardType extends entityWithId{
     type: string;
+}
+
+export interface store extends entityWithId{
+    name: string;
+    phone: string;
+    address: string;
 }
 
 export interface systemError {
