@@ -31,7 +31,7 @@ router.use((req, res, next) => {
 });
 
 /** Routes */
-router.use('/general/', storeRoutes.router);
+router.use('/stores/', storeRoutes.router);
 router.use('/auth/', authenticationRoutes.router);
 router.use('/user/', userRoutes.router);
 

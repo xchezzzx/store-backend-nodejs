@@ -1,20 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 import { NON_EXISTING_ID } from '../constants';
-import { AuthenticatedRequest, systemError, whiteBoardType } from '../entities';
+import { AuthenticatedRequest, systemError, store } from '../entities';
 import { RequestHelper } from '../helpers/request.helper';
 import { ResponseHelper } from '../helpers/response.helper';
 import { ErrorService } from '../services/error.service';
-import { SchoolService } from '../services/store.service';
+import { StoreService } from '../services/store.service';
 
 const errorService: ErrorService = new ErrorService();
-const schoolService: SchoolService = new SchoolService(errorService);
+const storeService: StoreService = new StoreService(errorService);
 
-const getBoardTypes = async (req: Request, res: Response, next: NextFunction) => {
+const getStores = async (req: Request, res: Response, next: NextFunction) => {
     console.log("User data: ", (req as AuthenticatedRequest).userData)
-    schoolService.getBoardTypes()
-        .then((result: whiteBoardType[]) => {
+    storeService.getStores()
+        .then((result: store[]) => {
             return res.status(200).json({
-                types: result
+                stores: result
             });     
         })
         .catch((error: systemError) => {
@@ -22,12 +22,12 @@ const getBoardTypes = async (req: Request, res: Response, next: NextFunction) =>
         });
 };
 
-const getBoardTypeById = async (req: Request, res: Response, next: NextFunction) => {
+const getStoreById = async (req: Request, res: Response, next: NextFunction) => {
     const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(errorService, req.params.id);
         if (typeof numericParamOrError === "number") {
             if (numericParamOrError > 0) {
-            schoolService.getBoardTypeById(numericParamOrError)
-                .then((result: whiteBoardType) => {
+            storeService.getStoreById(numericParamOrError)
+                .then((result: store) => {
                     return res.status(200).json(result);     
                 })
                 .catch((error: systemError) => {
@@ -43,17 +43,19 @@ const getBoardTypeById = async (req: Request, res: Response, next: NextFunction)
         }
 };
 
-const updateBoardTypeById = async (req: Request, res: Response, next: NextFunction) => {
+const updateStoreById = async (req: Request, res: Response, next: NextFunction) => {
     const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(errorService, req.params.id);
         if (typeof numericParamOrError === "number") {
             if (numericParamOrError > 0) {
-                const body: whiteBoardType = req.body;
+                const body: store = req.body;
 
-                schoolService.updateBoardTypeById({
+                storeService.updateStoreById({
                     id: numericParamOrError,
-                    type: body.type
+                    name: body.name,
+                    phone: body.phone,
+                    address: body.address
                 }, (req as AuthenticatedRequest).userData.userId)
-                .then((result: whiteBoardType) => {
+                .then((result: store) => {
                     return res.status(200).json(result);     
                 })
                 .catch((error: systemError) => {
@@ -69,15 +71,17 @@ const updateBoardTypeById = async (req: Request, res: Response, next: NextFuncti
         }
 };
 
-const addBoardType = async (req: Request, res: Response, next: NextFunction) => {
-    const body: whiteBoardType = req.body;
+const addStore = async (req: Request, res: Response, next: NextFunction) => {
+    const body: store = req.body;
 
-    schoolService.addBoardType({
+    storeService.addStore({
         id: NON_EXISTING_ID,
-        type: body.type
+        name: body.name,
+        phone: body.phone,
+        address: body.address
     }, (req as AuthenticatedRequest).userData.userId)
 
-        .then((result: whiteBoardType) => {
+        .then((result: store) => {
             return res.status(200).json(result);
         })
         .catch((error: systemError) => {
@@ -85,11 +89,11 @@ const addBoardType = async (req: Request, res: Response, next: NextFunction) => 
         })
 };
 
-const deleteBoardTypeById = async (req: Request, res: Response, next: NextFunction) => {
+const deleteStoreById = async (req: Request, res: Response, next: NextFunction) => {
     const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(errorService, req.params.id);
         if (typeof numericParamOrError === "number") {
             if (numericParamOrError > 0) {
-                schoolService.deleteBoardTypeById(numericParamOrError, (req as AuthenticatedRequest).userData.userId)
+                storeService.deleteStoreById(numericParamOrError, (req as AuthenticatedRequest).userData.userId)
                 .then(() => {
                     return res.sendStatus(200);     
                 })
@@ -106,17 +110,4 @@ const deleteBoardTypeById = async (req: Request, res: Response, next: NextFuncti
         }
 };
 
-// SQL injection made by sending the following as a parameter: <' OR 1=1 -- >
-const getBoardTypeByTitle = async (req: Request, res: Response, next: NextFunction) => {
-    let title: string = req.params.title;
-    
-    schoolService.getBoardTypeByTitle(title)
-        .then((result: whiteBoardType[]) => {
-            return res.status(200).json(result);
-        })
-        .catch((error: systemError) => {
-            return ResponseHelper.handleError(res, error);
-        });
-};
-
-export default { getBoardTypes, getBoardTypeById, getBoardTypeByTitle, updateBoardTypeById, addBoardType, deleteBoardTypeById };
+export default { getStores, getStoreById, updateStoreById, addStore, deleteStoreById };
