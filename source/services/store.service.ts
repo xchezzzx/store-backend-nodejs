@@ -61,20 +61,19 @@ export class StoreService implements IStoreService {
     public updateStoreById(store: store, userId: number): Promise<store> {
         return new Promise<store>((resolve, reject) => {
             const updateDate: Date = new Date();
-            SqlHelper.executeQueryNoResult(this.errorService, Queries.UpdateStoreById, false, store.name, store.address, store.phone, DateHelper.dateToString(updateDate), userId, store.id, Status.Active)
+            SqlHelper.executeQueryNoResult(this.errorService, Queries.UpdateStoreById, false, store.name, store.phone, store.address, DateHelper.dateToString(updateDate), userId, store.id, Status.Active)
             .then(() => {
                 resolve(store);
             })
             .catch((error: systemError) => reject(error));
         });
     }
-
-
     
     public addStore(store: store, userId: number): Promise<store> {
         return new Promise<store>((resolve, reject) => {
             const createDate: string = DateHelper.dateToString(new Date());
-            SqlHelper.createNew(this.errorService, Queries.AddStore, store, store.name, store.address, store.phone, createDate, createDate, userId, userId, Status.Active)
+            
+            SqlHelper.createNew(this.errorService, Queries.AddStore, store, store.name, store.phone, store.address, createDate, createDate, userId, userId, Status.Active)
             .then((result: entityWithId) => {
                 resolve(result as store);
             })
