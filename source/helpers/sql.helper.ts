@@ -125,6 +125,7 @@ export class SqlHelper {
                                 }
                                 else {
                                     reject(badQueryError);
+                                    
                                 }
                             }
                             else {
@@ -139,8 +140,6 @@ export class SqlHelper {
             })
         });
     }
-
-
 
     private static openConnection(errorService: ErrorService): Promise<Connection> {
         return new Promise<Connection>((resolve, reject) => {
