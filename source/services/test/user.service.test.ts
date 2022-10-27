@@ -1,9 +1,9 @@
-import { user } from "../../entities";
+import { employee } from "../../entities";
 import { UserService} from "../user.service";
 
 let testUserService: UserService;
 
-const testUser: user = {
+const testUser: employee = {
     id: 1,
     firstName: 'Test',
     lastName: 'Testov',

@@ -9,6 +9,11 @@ export enum Role {
     RegularUser = 3
 }
 
+export enum Gender {
+    Female = 0,
+    Male = 1
+}
+
 export enum AppError {
     General = "General",
     ConnectionError = "ConnectionError",
