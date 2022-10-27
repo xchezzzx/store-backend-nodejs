@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import storeRoutes from './routes/store.routes';
 import authenticationRoutes from './routes/authentication.routes';
 import userRoutes from './routes/user.routes';
+import productRoutes from './routes/product.routes';
 
 
 const router: Express = express();
@@ -31,9 +32,10 @@ router.use((req, res, next) => {
 });
 
 /** Routes */
-router.use('/stores/', storeRoutes.router);
+router.use('/store/', storeRoutes.router);
 router.use('/auth/', authenticationRoutes.router);
-router.use('/user/', userRoutes.router);
+router.use('/employee/', userRoutes.router);
+router.use('/product', productRoutes.router);
 
 /** Error handling */
 router.use((req, res, next) => {
